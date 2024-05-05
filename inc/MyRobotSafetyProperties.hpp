@@ -11,19 +11,34 @@ public:
     MyRobotSafetyProperties(ControlSystem &cs, double dt);
 
     // Define all possible events
-    eeros::safety::SafetyEvent doSystemOff;
-    eeros::safety::SafetyEvent doSystemOn;
+    eeros::safety::SafetyEvent doNext;
+    eeros::safety::SafetyEvent doAbort;
+    eeros::safety::SafetyEvent doShutdown;
+    eeros::safety::SafetyEvent doStart;
+    eeros::safety::SafetyEvent doRestart;
+
 
     // Defina all possible levels
-    eeros::safety::SafetyLevel slSystemOff;
-    eeros::safety::SafetyLevel slSystemOn;
-
+    eeros::safety::SafetyLevel slEmergency;
+    eeros::safety::SafetyLevel slEmergencyShuttingDown;
+    eeros::safety::SafetyLevel slEmergencyMotorStop;
+    eeros::safety::SafetyLevel slSystemOFF;
+    eeros::safety::SafetyLevel slShuttingDown;
+    eeros::safety::SafetyLevel slMotorStop;
+    eeros::safety::SafetyLevel slSystemIdle;
+    eeros::safety::SafetyLevel slSystemInit;
+    eeros::safety::SafetyLevel slMotorStart;
+    eeros::safety::SafetyLevel slSystemON;
 private:
     // Define all critical outputs
-    // eeros::hal::Output<bool>* ...;
+    eeros::hal::Output<bool>* ledGreen;
+    eeros::hal::Output<bool>* ledRed;
+    eeros::hal::Output<bool>* led0;
 
     // Define all critical inputs
-    // eeros::hal::Input<bool>* ...;
+    eeros::hal::Input<bool>* bMode;
+    eeros::hal::Input<bool>* bPause;
+
 
     ControlSystem &cs;
 };

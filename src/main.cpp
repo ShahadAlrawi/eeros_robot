@@ -20,11 +20,10 @@ int main(int argc, char **argv)
     eeros::logger::Logger::setDefaultStreamLogger(std::cout);
     eeros::logger::Logger log = eeros::logger::Logger::getLogger();
 
-    log.info() << "Starting template project...";
-
-    // log.info() << "Initializing hardware...";
-    // eeros::hal::HAL& hal = eeros::hal::HAL::instance();
-    // hal.readConfigFromFile(&argc, argv);
+    log.info() << "Starting My Robot project ...";
+    log.info() << "Initializing hardware...";
+    eeros::hal::HAL& hal = eeros::hal::HAL::instance();
+    hal.readConfigFromFile(&argc, argv);
 
     log.info() << "Initializing control system...";
     ControlSystem cs(dt);
@@ -32,7 +31,7 @@ int main(int argc, char **argv)
     log.info() << "Initializing safety system...";
     MyRobotSafetyProperties sp(cs, dt);
     eeros::safety::SafetySystem ss(sp, dt);
-    cs.timedomain.registerSafetyEvent(ss, sp.doSystemOff); // fired if timedomain fails to run properly
+    cs.timedomain.registerSafetyEvent(ss, sp.doShutdown); // fired if timedomain fails to run properly
     signal(SIGINT, signalHandler);
 
     log.info() << "Initializing sequencer...";
@@ -43,7 +42,7 @@ int main(int argc, char **argv)
     log.info() << "Initializing executor...";
     auto &executor = eeros::Executor::instance();
     executor.setMainTask(ss);
-    ss.triggerEvent(sp.doSystemOn);
+    ss.triggerEvent(sp.doStart);
     executor.run();
 
     mainSequence.wait();
