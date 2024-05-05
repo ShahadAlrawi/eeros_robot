@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
     mainSequence.wait();
 
-    log.info() << "Template project finished...";
+    log.info() << "My Robot project finished...";
 
     return 0;
 }
