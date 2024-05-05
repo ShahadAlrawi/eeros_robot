@@ -20,16 +20,20 @@ The system safety levels consists of:
 9 - slSystemON
 ---------------------------
 
-LedGreen: Show if system is in Startup
-    ON in level 6 - 8
-    OFF otherwise
-
 LedRed: Show if system is in emergency
     ON in level 0 - 2
     OFF otherwise
 
+Led0 : Show if system in graceful shutdown
+    ON in level 3 - 5
+    OFF otherwise
+
+LedGreen: Show if system is in Startup
+    ON in level 6 - 9
+    OFF otherwise
+
 bMode: Restart (restart the system from emergency or off state)
-bPause: Abort (can be triggered in levels 3 - 8 to start move to emergency)
+bPause: Abort (can be triggered in levels 3 - 9 for emergency shutdown)
 */
 MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
     : cs(cs), 
@@ -121,8 +125,6 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
     slSystemON.setOutputActions({               set(ledRed, false), set(ledGreen, true), set(led0, false)});
 
     // Define and add level actions
-
-
     slEmergency.setLevelAction([&](SafetyContext *privateContext) {
         cs.timedomain.stop();
     });
@@ -144,7 +146,7 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
     });
     slSystemIdle.setLevelAction([&](SafetyContext *privateContext) {
         cs.timedomain.start();
-        // no default next state
+        // no default next safety level
         // must be triggered from main
     });
     slSystemInit.setLevelAction([&](SafetyContext *privateContext) {
@@ -154,7 +156,7 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
         privateContext->triggerEvent(doNext);
     });
     slSystemON.setLevelAction([&](SafetyContext *privateContext) {
-        // No default next safety level - this is the lowest safe level
+        // no default next safety level - this is the lowest safe level
         // only triggered by Abort or Shutdown
     });
 
