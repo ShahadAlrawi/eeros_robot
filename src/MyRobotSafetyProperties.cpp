@@ -145,11 +145,11 @@ MyRobotSafetyProperties::MyRobotSafetyProperties(ControlSystem &cs, double dt)
         privateContext->triggerEvent(doNext);
     });
     slSystemIdle.setLevelAction([&](SafetyContext *privateContext) {
-        cs.timedomain.start();
         // no default next safety level
         // must be triggered from main
     });
     slSystemInit.setLevelAction([&](SafetyContext *privateContext) {
+        cs.timedomain.start();
         privateContext->triggerEvent(doNext);
     });
     slMotorStart.setLevelAction([&](SafetyContext *privateContext) {
