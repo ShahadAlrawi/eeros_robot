@@ -18,6 +18,7 @@ public:
     PeripheralInput<> q1;
     PeripheralOutput<> servo1;
     Gain<> gain;
+    Constant<> c;
     TimeDomain timedomain;
 };
 
